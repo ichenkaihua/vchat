@@ -1,5 +1,5 @@
 
 rootProject.name = 'vchat'
 include 'api'
-include 'base'
+include 'core'
 
