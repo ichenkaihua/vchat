@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+        ">
+
+
+
+
+
+	<bean id="ebeandataSource" class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
+		<constructor-arg ref="dataSource" />
+	</bean>
+
+	<!--  Transaction Manager -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="ebeandataSource"/>
+	</bean>
+
+	<bean id="serverConfig" class="com.avaje.ebean.config.ServerConfig">
+		<property name="externalTransactionManager">
+			<bean class="com.avaje.ebean.springsupport.txn.SpringAwareJdbcTransactionManager"/>
+		</property>
+		<property name="defaultServer" value="true"/>
+
+		<property name="namingConvention">
+			<bean class="com.avaje.ebean.config.UnderscoreNamingConvention"/>
+		</property>
+		<property name="name" value="ebeanServer"/>
+
+		<property name="packages">
+			<list>
+				<value>com.chenkaihua.vchat.model</value>
+			</list>
+		</property>
+
+		<property name="dataSource" ref="ebeandataSource"/>
+		<!--<property name="disableClasspathSearch" value="true"/>-->
+		<!--是否生成sql文件-->
+		<property name="ddlGenerate" value="false"/>
+		<!--时候启动时读取sql文件，并执行-->
+		<property name="ddlRun" value="false"/>
+	</bean>
+
+	<!-- Ebean server -->
+	<bean id="ebeanServer" class="com.avaje.ebean.springsupport.factory.EbeanServerFactoryBean">
+		<property name="serverConfig" ref="serverConfig"/>
+	</bean>
+
+	<aop:aspectj-autoproxy  />
+
+	<aop:config>
+		<aop:pointcut id="appService"
+					  expression="execution(* com.chenkaihua.vchat.service..*Service*.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="appService" />
+	</aop:config>
+
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="select*" read-only="true" />
+			<tx:method name="find*" read-only="true" />
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="sava*"  />
+			<tx:method name="update*" />
+			<tx:method name="delete*" />
+		</tx:attributes>
+	</tx:advice>
+
+
+</beans>

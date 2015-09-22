@@ -1,20 +1,33 @@
 
 allprojects{
     version '0.1.0'
+
+
+
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.6'
+}
+
+
+
+allprojects{
+    apply plugin: 'java'
+
 }
 
 
 subprojects{
-    apply plugin: 'java'
+
 
     repositories{
+        //mavenLocal()
         mavenCentral()
     }
+
     dependencies{
         testCompile 'junit:junit:4.12'
-        //compile 'com.github.ichenkaihua:greendao-generate:0.0.3'
-        runtime 'com.github.ichenkaihua:greendao-generate:0.0.3'
-
     }
 }
 
