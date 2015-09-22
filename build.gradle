@@ -1,4 +1,8 @@
 
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+apply plugin: 'eclipse-wtp'
+
 allprojects{
     version '0.1.0'
 
@@ -18,8 +22,12 @@ allprojects{
 }
 
 
-subprojects{
 
+
+subprojects{
+    apply plugin:'java'
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
 
     repositories{
         //mavenLocal()
@@ -29,5 +37,26 @@ subprojects{
     dependencies{
         testCompile 'junit:junit:4.12'
     }
+}
+
+gradle.projectsEvaluated {
+    gradle.rootProject {
+        ideaModule.enabled = false
+        idea {
+            project {
+                // modules = subprojects*.idea.module
+                // 如果某个子项目的 ideaModule 设置为 false，则不会在 idea 中生成 module
+                def modulesToInclude = subprojects.findAll {it.ideaModule.enabled == true}
+                modules = modulesToInclude.idea.module
+            }
+        }
+    }
+}
+
+idea {
+    module {
+        downloadSources = true
+    }
+
 }
 
