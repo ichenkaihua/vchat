@@ -1,7 +1,6 @@
 package com.chenkaihua.vchat.service;
 
 import com.avaje.ebean.EbeanServer;
-import com.chenkaihua.vchat.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,14 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class UserService  {
+public class UserService {
 
     @Autowired
     EbeanServer ebeanServer;
-
-
-
-
 
 
 }
