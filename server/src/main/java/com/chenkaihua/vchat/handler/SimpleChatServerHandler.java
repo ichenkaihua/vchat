@@ -12,8 +12,6 @@ import org.springframework.stereotype.Component;
 /**
  * Created by chenkaihua on 15-9-22.
  */
-@Component
-@ChannelHandler.Sharable
 public class SimpleChatServerHandler extends SimpleChannelInboundHandler<String> {
     public static ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
