@@ -18,10 +18,8 @@ public class SimpleChatServerHandler extends SimpleChannelInboundHandler<String>
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {  // (2)
         Channel incoming = ctx.channel();
-        for (Channel channel : channels) {
-            channel.writeAndFlush("[SERVER] - " + incoming.remoteAddress() + " 加入\n");
-        }
-        channels.add(ctx.channel());
+        channels.writeAndFlush("[SERVER] - " + incoming.remoteAddress() + " 加入\n");
+       channels.add(ctx.channel());
     }
 
     @Override
