@@ -1,6 +1,7 @@
 package com.chenkaihua.vchat.model;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by chenkaihua on 15-9-12.
@@ -15,6 +16,39 @@ public class User {
 
     @Column(name = "password")
     private String password;
+
+
+    @Column(name = "sign")
+    private  String sign;
+
+    @Column(name = "birth")
+    private Date birth;
+    @Column(name = "create_time")
+    private Date create_time;
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
+
+    public Date getBirth() {
+        return birth;
+    }
+
+    public void setBirth(Date birth) {
+        this.birth = birth;
+    }
+
+    public Date getCreate_time() {
+        return create_time;
+    }
+
+    public void setCreate_time(Date create_time) {
+        this.create_time = create_time;
+    }
 
     public String getPassword() {
         return password;

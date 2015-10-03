@@ -1,12 +1,14 @@
 package com.chenkaihua.vchat.client;
 
 import com.chenkaihua.vchat.client.initializer.SimpleChatClientInitializer;
+import com.chenkaihua.vchat.client.view.FrameController;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
@@ -21,7 +23,10 @@ public class SimpleChatClient {
     }
 
     public void run() throws Exception {
-        EventLoopGroup group = new NioEventLoopGroup();
+        FrameController frameController = new FrameController();
+        frameController.launchDialog();
+        
+      /*  EventLoopGroup group = new NioEventLoopGroup();
         try {
             Bootstrap bootstrap = new Bootstrap()
                     .group(group)
@@ -29,15 +34,13 @@ public class SimpleChatClient {
                     .handler(new SimpleChatClientInitializer());
             Channel channel = bootstrap.connect(host, port).sync().channel();
             System.out.println("客户端已经启动，输入文字发送给server:");
-            BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-            while (true) {
-                channel.writeAndFlush(in.readLine() + "\r\n");
-            }
+
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             group.shutdownGracefully();
-        }
+        }*/
 
     }
 }

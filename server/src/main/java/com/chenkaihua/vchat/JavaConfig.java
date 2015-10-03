@@ -1,16 +1,16 @@
 package com.chenkaihua.vchat;
 
-import com.avaje.ebean.EbeanServer;
-import com.avaje.ebean.EbeanServerFactory;
 import com.avaje.ebean.config.ServerConfig;
 import com.avaje.ebean.config.UnderscoreNamingConvention;
 import com.avaje.ebean.springsupport.factory.EbeanServerFactoryBean;
 import com.avaje.ebean.springsupport.txn.SpringAwareJdbcTransactionManager;
-import com.chenkaihua.vchat.service.UserService;
 import org.avaje.agentloader.AgentLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
@@ -26,7 +26,7 @@ import java.util.List;
  * Created by chenkaihua on 15-9-25.
  */
 @Configuration
-@ComponentScan
+@ComponentScan("com.chenkaihua.vchat")
 @EnableTransactionManagement(proxyTargetClass = true)
 public class JavaConfig implements TransactionManagementConfigurer {
 
@@ -35,7 +35,7 @@ public class JavaConfig implements TransactionManagementConfigurer {
 
     @Override
     public PlatformTransactionManager annotationDrivenTransactionManager() {
-        return null;
+        return txManager();
     }
 
     @Bean
@@ -49,7 +49,8 @@ public class JavaConfig implements TransactionManagementConfigurer {
     }
 
 
-    @Bean
+    @Bean(name = "txManager")
+
     public PlatformTransactionManager txManager() {
         return new DataSourceTransactionManager(dataSource());
     }
@@ -79,6 +80,8 @@ public class JavaConfig implements TransactionManagementConfigurer {
 
         AnnotationConfigApplicationContext configApplicationContext
                 = new AnnotationConfigApplicationContext(JavaConfig.class);
+
+
         Server server = configApplicationContext.getBean(Server.class);
         try {
             server.run();
