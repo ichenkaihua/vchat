@@ -19,13 +19,12 @@ public class SimpleChatClient {
 
     public SimpleChatClient(String host, int port) {
         this.host = host;
-        this.port = port;
-    }
+        this.port = port; }
+    //测试
 
     public void run() throws Exception {
         FrameController frameController = new FrameController();
         frameController.launchDialog();
-        
       /*  EventLoopGroup group = new NioEventLoopGroup();
         try {
             Bootstrap bootstrap = new Bootstrap()

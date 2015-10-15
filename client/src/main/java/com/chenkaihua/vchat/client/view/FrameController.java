@@ -21,6 +21,7 @@ public class FrameController {
 
 
 
+
         jFrame.setVisible(true);
         jFrame.setDefaultCloseOperation(JDialog.EXIT_ON_CLOSE);
         return jFrame;
