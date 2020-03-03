@@ -1,4 +1,5 @@
 # vchat
+
 ## 介绍
 大学写的一个聊天应用，初学java的同学可以看看
 
@@ -12,10 +13,16 @@
 ![login](shot/login.png)
 
 
-##使用
+## 使用
 
 * 项目分为三个子项目:`base`、`client`、`server`
 * mysql中新建数据库，导入项目的`chat.sql`到数据库中
 * mvn install
+
+## 待实现
+
+* 使用`json`序列化代替`object serializable`
+ 
+
 
 ## 关于作者
