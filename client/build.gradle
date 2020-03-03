@@ -1,6 +1,0 @@
-dependencies{
-    compile 'io.netty:netty-all:4.0.31.Final'
-    compile project(":client")
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-
-}

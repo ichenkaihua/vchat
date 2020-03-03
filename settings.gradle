@@ -1,5 +1,0 @@
-rootProject.name = 'vchat'
-include 'client'
-include 'server'
-include 'message'
-
