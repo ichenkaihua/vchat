@@ -13,18 +13,10 @@ public class Client {
 	private VNet net;
 
 	public Client() {
-
-		System.out.println(getClass().getResource("/"));
-
-
-
 		taskMgr = new TaskMgr();
 		net = new VNet(taskMgr);
 		frameMgr = new FrameMgr(taskMgr);
 		msgMgr = new MsgMgr(taskMgr, frameMgr);
-
-
-
 	}
 
 	public static void main(String[] args) {

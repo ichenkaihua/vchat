@@ -338,6 +338,7 @@ public class ImageConstance {
 					ImageConstance.class.getClassLoader().getResource(
 							"image/button/main_search_enter.png"));
 		} catch (NullPointerException e) {
+			e.printStackTrace();
 			System.out.println("路径出错，请检查");
 		}
 
@@ -514,38 +515,36 @@ public class ImageConstance {
 
 		try {
 			//ImageConstance.class.getResourceAsStream("image/")
-			System.out.println("开始载入");
-			System.out.println(ImageConstance.class.getClassLoader().getResource("image/trayicon/loginstate/loading_1.ico"));
-			System.out.println("resource:"+ImageConstance.class.getResource(  "image/trayicon/loginstate/loading_1.ico"));
+
 			List<BufferedImage> image1 = ICODecoder.read(ImageConstance.class
 					.getResourceAsStream(
-							"/image/trayicon/loginstate/loading_1.ico"));
+							"/image/trayicon/loginstate/Loading_1.ico"));
 
 			tray_login_state.put(LoginState.Loading_1, image1.get(0));
 
 			List<BufferedImage> image2 = ICODecoder.read(ImageConstance.class
 					.getClassLoader().getResourceAsStream(
-							"image/trayicon/loginstate/loading_2.ico"));
+							"image/trayicon/loginstate/Loading_2.ico"));
 			tray_login_state.put(LoginState.Loading_2, image2.get(0));
 
 			List<BufferedImage> image3 = ICODecoder.read(ImageConstance.class
 					.getClassLoader().getResourceAsStream(
-							"image/trayicon/loginstate/loading_3.ico"));
+							"image/trayicon/loginstate/Loading_3.ico"));
 			tray_login_state.put(LoginState.Loading_3, image3.get(0));
 
 			List<BufferedImage> image4 = ICODecoder.read(ImageConstance.class
 					.getClassLoader().getResourceAsStream(
-							"image/trayicon/loginstate/loading_4.ico"));
+							"image/trayicon/loginstate/Loading_4.ico"));
 			tray_login_state.put(LoginState.Loading_4, image4.get(0));
 
 			List<BufferedImage> image5 = ICODecoder.read(ImageConstance.class
 					.getClassLoader().getResourceAsStream(
-							"image/trayicon/loginstate/loading_5.ico"));
+							"image/trayicon/loginstate/Loading_5.ico"));
 			tray_login_state.put(LoginState.Loading_5, image5.get(0));
 
 			List<BufferedImage> image6 = ICODecoder.read(ImageConstance.class
 					.getClassLoader().getResourceAsStream(
-							"image/trayicon/loginstate/loading_6.ico"));
+							"image/trayicon/loginstate/Loading_6.ico"));
 			tray_login_state.put(LoginState.Loading_6, image6.get(0));
 
 		} catch (IOException e) {
