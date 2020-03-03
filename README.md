@@ -1,5 +1,10 @@
 # vchat
 ## 介绍
-整理硬盘时看到大一写的一个及时聊天的应用，加上一直想用netty这个项目，因此重写，项目分为server和client模块，server端由spring+ebeanorm+netty搭建
+大学写的一个聊天应用，初学java的同学可以看看
+
+* 使用maven构建，原本是eclipse本地项目
+* 使用java7的AIO通讯
+* 界面模仿的是QQ2013，因为是2013-2014年写的
+* 后面再补
 ##使用
 ## 关于作者
