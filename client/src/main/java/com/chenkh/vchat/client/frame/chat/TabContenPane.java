@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.List;
+import java.util.function.Consumer;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -26,17 +28,22 @@ import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.text.DefaultCaret;
+import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 
 import com.chenkh.vchat.client.UserMgr;
+import com.chenkh.vchat.client.chat.IFriendChatSession;
 import com.chenkh.vchat.client.enu.AttSetType;
 import com.chenkh.vchat.client.frame.ImageConstance;
 import com.chenkh.vchat.client.frame.VFactory;
 
+/**
+ * 聊天界面
+ */
 public class TabContenPane extends JPanel implements MouseListener,
 		ActionListener {
 	private VFactory factory = VFactory.getInstance();
-	private final Tab tab;
+	//private final Tab tab;
 	private JButton bnName;
 	private JButton bnHead;
 	private JLabel lbeSign = new JLabel();
@@ -72,8 +79,91 @@ public class TabContenPane extends JPanel implements MouseListener,
 			.getToggelButton(ImageConstance.font_color_normal,
 					ImageConstance.font_color_highlight,
 					ImageConstance.font_color_push);
+	private Consumer<IFriendChatSession> clickCloseButtonConsumer;
+	private IFriendChatSession friendChatSession;
 
-	public TabContenPane(Tab tab, StyledDocument doc, String name, String sign) {
+	public TabContenPane(IFriendChatSession friendChatSession,StyledDocument doc,Consumer<IFriendChatSession> clickCloseButtonConsumer){
+		super(new BorderLayout());
+		this.friendChatSession=friendChatSession;
+		this.clickCloseButtonConsumer=clickCloseButtonConsumer;
+
+		textPane = new JTextPane(doc);
+
+		DefaultCaret caret = new DefaultCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+		caret.setVisible(true);
+		textPane.setCaret(caret);
+		textPane.setEditable(false);
+
+
+
+
+		Integer[] sizes = new Integer[11];
+
+		for (int i = 0; i < sizes.length; i++) {
+			sizes[i] = 9 + i;
+		}
+
+		font_size = new JComboBox<Integer>(sizes);
+
+		bnFace = factory.getSigleImageButton(ImageConstance.face);
+		bnFont = factory.getSigleImageButton(ImageConstance.font);
+		bnRegister = factory.getSigleImageButton(ImageConstance.register);
+		sendpic = factory.getSigleImageButton(ImageConstance.sendpic);
+		bnRegister.setText("消息记录");
+
+		// 定义一个顶部容器，装入头像，用户名，签名等,设置为透明
+		JPanel topPane = factory.getBoxLayoutPanelByXImage();
+		// topPane.setBackground(new Color(210,210,250));
+		topPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		// 定义一个头像右边容器，负责装入用户名，签名,设置为透明
+		JPanel topPane_right = factory.getBoxLayoutPanelByY();
+		topPane_right.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
+		topPane_right.setOpaque(false);
+
+		// 初始化头像，用户名，签名
+		bnHead = factory.getButton(ImageConstance.head);
+		bnHead.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2, true));
+		bnHead.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		Font f = new Font("宋体", Font.BOLD, 20);
+		bnName = factory.getButton(friendChatSession.getFriend().getUsernmae(), Color.BLACK);
+		// bnName.setForeground(Color.WHITE);
+		bnName.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0,
+				Color.black));
+		bnName.setBorderPainted(false);
+		bnName.setFocusPainted(false);
+
+		bnName.setFont(f);
+		lbeSign.setText(friendChatSession.getFriend().getSign());
+		lbeSign.setToolTipText(lbeSign.getText());
+
+		// 将用户名，签名放入右方容器
+		topPane_right.add(bnName);
+		topPane_right.add(Box.createGlue());
+		topPane_right.add(lbeSign);
+
+		// 将头像，用户名，签名添加到上方容器内
+		topPane.add(bnHead);
+		topPane.add(topPane_right);
+
+		// 初始化发送，关闭按钮
+		bnClose = new JButton("关闭");
+		bnSend = new JButton("发送");
+		bnClose.setFocusPainted(false);
+		bnSend.setFocusPainted(false);
+		bnClose.addActionListener(this);
+		bnSend.addActionListener(this);
+		font_family.setAlignmentX(SwingConstants.CENTER);
+
+		initCenterPane();
+
+		this.add(topPane, BorderLayout.NORTH);
+		this.add(splitPane, BorderLayout.CENTER);
+
+		this.addListener();
+	}
+
+	/*public TabContenPane(Tab tab, StyledDocument doc, String name, String sign) {
 
 		super(new BorderLayout());
 
@@ -154,7 +244,7 @@ public class TabContenPane extends JPanel implements MouseListener,
 
 		this.addListener();
 
-	}
+	}*/
 
 	private void initCenterPane() {
 
@@ -316,16 +406,24 @@ public class TabContenPane extends JPanel implements MouseListener,
 
 	}
 
+
+
+
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
 
 		if (obj == bnClose) {
-			tab.remove();
+			//tab.remove();//76, 147, 214
+			clickCloseButtonConsumer.accept(friendChatSession);
 		} else if (obj == bnSend) {
 			if (textEditor.getText() != null
 					&& !textEditor.getText().trim().equals("")) {
-				tab.sendMsg(textEditor.getText());
+				//tab.sendMsg(textEditor.getText());
+				friendChatSession.sendTextMsg(textEditor.getText());
+				//todo 给doc插入string
+				((VDoc)textPane.getDocument()).addSelfMsg(textEditor.getText());
 				 bar.setValue(bar.getMaximum());
 				textEditor.setText("");
 			}

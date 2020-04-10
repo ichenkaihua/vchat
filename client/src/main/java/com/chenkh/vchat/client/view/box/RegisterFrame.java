@@ -7,27 +7,19 @@ import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.util.function.Consumer;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 
-import com.chenkh.vchat.base.msg.ClientMsg;
 import com.chenkh.vchat.base.msg.client.RegisterMsg;
+import com.chenkh.vchat.base.msg.server.RegisterSucessMsg;
+import com.chenkh.vchat.client.IContext;
 import com.chenkh.vchat.client.frame.VFactory;
-import com.chenkh.vchat.client.view.frame.LoginFrame;
+import com.chenkh.vchat.client.net.IMsgListener;
 import com.chenkh.vchat.base.bean.User;
 
-public class RegisterFrame extends FrameBox {
+public class RegisterFrame extends FrameBox implements IMsgListener {
 	private VFactory factory = VFactory.getInstance();
 
 	private CardLayout cardLayout = new CardLayout();
@@ -49,12 +41,26 @@ public class RegisterFrame extends FrameBox {
 	private JTextField phone = new JTextField();
 	private JTextArea addr = new JTextArea();
 	private JButton bnReturn = new JButton("现在登陆");
-	private LoginFrame frame;
+	//private LoginFrame frame;
+	private IContext context;
 
-	public RegisterFrame(LoginFrame frame,String title, int width, int height) {
+	@Override
+	public void dispose() {
+		context.getNetClient().removeMsgListener(this);
+		super.dispose();
+	}
+
+
+
+	private Consumer<String> registerConsumer;
+
+	public RegisterFrame(String title, int width, int height, IContext context, Consumer<String> registerId) {
 		super(title, width, height);
+		this.context=context;
+		this.registerConsumer=registerId;
+		context.getNetClient().addMsgListener(this);
 		resultId.setEditable(false);
-		this.frame = frame;
+	//	this.frame = frame;
 		registerPane.add(this.getLabel("*用户名:"));
 
 		userName.setAutoscrolls(false);
@@ -147,7 +153,7 @@ public class RegisterFrame extends FrameBox {
 			this.clearAll();
 		}else if(e.getSource()==bnReturn){
 			String sid = resultId.getText().trim();
-			frame.loginNow(sid);
+
 			this.dispose();
 		} 
 		else {
@@ -184,13 +190,13 @@ public class RegisterFrame extends FrameBox {
 	}
 
 
-	public void succed(int id) {
-		this.lbeState.setText("申请成功，账号为：");
-		this.resultId.setVisible(true);
-		this.resultId.setText(id+"");
-		
+
+	@Override
+	public void onReceivedRegisterResultMsg(RegisterSucessMsg registerSucessMsgMsgBody) {
+		SwingUtilities.invokeLater(()->{this.lbeState.setText("申请成功，账号为：");
+			this.resultId.setVisible(true);
+			this.resultId.setText(registerSucessMsgMsgBody.getId()+"");});
 	}
-	
 	
 	private void register(){
 		String name = userName.getText();
@@ -224,8 +230,10 @@ public class RegisterFrame extends FrameBox {
 		u.setAddr(addr.getText());
 		u.setPhone(phone.getText());
 		cardLayout.show(rMainPane, "resultPane");
-		ClientMsg msg = new RegisterMsg(u);
-		frame.sendMsg(msg);		
+		RegisterMsg msg = new RegisterMsg(u);
+
+		context.getNetClient().sendRegisterMsg(msg);
+
 		
 		
 	}

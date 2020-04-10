@@ -1,10 +1,8 @@
 package com.chenkh.vchat.base.msg.server;
 
-import com.chenkh.vchat.base.msg.ClientMsgMgr;
-import com.chenkh.vchat.base.msg.ServerMsg;
 import com.chenkh.vchat.base.bean.Stranger;
 
-public class StrangerMsg implements ServerMsg {
+public class StrangerMsg  {
 	public Stranger getStranger() {
 		return stranger;
 	}
@@ -28,9 +26,6 @@ public class StrangerMsg implements ServerMsg {
 	private final String msg;
 	private final int toId;
 
-	@Override
-	public void parse(ClientMsgMgr mgr) {
-		mgr.parseMsg(this);
-	}
+
 
 }

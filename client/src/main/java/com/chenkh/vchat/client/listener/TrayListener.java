@@ -2,10 +2,9 @@ package com.chenkh.vchat.client.listener;
 
 public interface TrayListener {
 
-	public void trayClick();
+	default void trayClick(){};
 
-	
+	 default void trayItemClick(Object source){};
 
-	
 
 }

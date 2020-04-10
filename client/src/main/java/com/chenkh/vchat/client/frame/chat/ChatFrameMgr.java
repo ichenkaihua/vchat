@@ -1,10 +1,14 @@
 package com.chenkh.vchat.client.frame.chat;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.chenkh.vchat.base.msg.ChatMsg;
+import com.chenkh.vchat.client.IContext;
+import com.chenkh.vchat.client.UserMgr;
 import com.chenkh.vchat.client.access.FrameTaskMgr;
 import com.chenkh.vchat.client.frame.ObjectContainer;
 
@@ -12,13 +16,14 @@ public class ChatFrameMgr implements ChatAccess {
 
 	private List<ChatFrame> frames = new ArrayList<ChatFrame>();
 	private int maxSize = 6;
-	private FrameTaskMgr mgr;
+
 	private Set<Integer> openIds = new HashSet<Integer>();
 	private ObjectContainer objc = new ObjectContainer();
+private IContext context;
+	public ChatFrameMgr(  IContext context) {
 
-	public ChatFrameMgr(FrameTaskMgr mgr) {
 
-		this.mgr = mgr;
+		this.context=context;
 
 	}
 
@@ -64,7 +69,11 @@ public class ChatFrameMgr implements ChatAccess {
 	}
 
 	public void sendMsg(String msg, int friendId) {
-		mgr.putChatMsg(msg, friendId);
+		//mgr.putChatMsg(msg, friendId);
+		int id = UserMgr.getInstance().getUser().getId();
+		ChatMsg chatMsg= new ChatMsg(id,friendId,msg,new Timestamp(System.currentTimeMillis()));
+
+		context.getNetClient().sendChatMsg(chatMsg);
 	}
 
 	@Override

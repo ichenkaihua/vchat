@@ -6,7 +6,7 @@ import com.chenkh.vchat.base.msg.ClientMsg;
 import com.chenkh.vchat.base.msg.ServerMsgMgr;
 import com.chenkh.vchat.base.bean.User;
 
-public class RegisterMsg implements ClientMsg {
+public class RegisterMsg  {
 	private final User user;
 
 	public RegisterMsg(User user) {
@@ -17,9 +17,6 @@ public class RegisterMsg implements ClientMsg {
 		return user;
 	}
 
-	@Override
-	public void parse(ServerMsgMgr mgr, AsynchronousSocketChannel socket) {
-		mgr.parseMsg(this, socket);
-	}
+
 
 }

@@ -2,7 +2,7 @@ package com.chenkh.vchat.base.msg;
 
 import java.util.List;
 
-public class OfflineMsg implements ServerMsg {
+public class OfflineMsg   {
 	private int toId;
 
 	//private ContenMsg[] msgs;
@@ -13,11 +13,6 @@ public class OfflineMsg implements ServerMsg {
 		this.msgs = msgs;
 	}
 
-	@Override
-	public void parse(ClientMsgMgr mgr) {
-		mgr.parseMsg(this);
-
-	}
 
 	public int getToId() {
 		return toId;

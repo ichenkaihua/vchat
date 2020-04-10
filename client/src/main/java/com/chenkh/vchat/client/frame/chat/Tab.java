@@ -5,12 +5,17 @@ import javax.swing.text.StyledDocument;
 
 import com.chenkh.vchat.client.UserMgr;
 import com.chenkh.vchat.base.bean.Friend;
+import com.chenkh.vchat.client.chat.IChatSession;
 
+/**
+ * 一个Tab代表了一个聊天界面，包含了ChatSession
+ */
 public class Tab {
-	private TabPane tabPane;
+	private tabTitlePanel tabPane;
 	private TabContenPane contenPane;
 	private int friendId;
 	private ChatFrame frame;
+	private IChatSession chatSession;
 
 	public Tab(ChatFrame frame, int friendId) {
 		this.friendId = friendId;
@@ -20,7 +25,7 @@ public class Tab {
 
 		String name = UserMgr.getInstance().getName(friendId);
 		String sign = UserMgr.getInstance().getSign(friendId);
-		tabPane = new TabPane(this, name);
+		tabPane = new tabTitlePanel(this, name);
 
 		StyledDocument doc = UserMgr.getInstance().getDocument(friendId);
 		contenPane = new TabContenPane(this, doc, name, sign);
@@ -31,7 +36,7 @@ public class Tab {
 		frame.removeChat(friendId);
 	}
 
-	public TabPane getTabPane() {
+	public tabTitlePanel getTabPane() {
 		return tabPane;
 	}
 

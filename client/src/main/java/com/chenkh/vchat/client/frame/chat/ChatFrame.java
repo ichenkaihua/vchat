@@ -73,6 +73,8 @@ public class ChatFrame extends JFrame implements ActionListener {
 		this.setUndecorated(true);
 		this.maxTabCount = maxSize;
 
+
+
 		timer = new Timer(500, new ActionListener() {
 			boolean flag;
 			Image org = ChatFrame.this.getIconImage();
@@ -150,9 +152,15 @@ public class ChatFrame extends JFrame implements ActionListener {
 
 	}
 
+
+
+
+
+
 	public void addChat(int id) {
 		Tab tab = new Tab(this, id);
 		tabbedPane.addTab(tab);
+
 		tabs.put(id, tab);
 		tabbedPane.setSelectTab(tab);
 

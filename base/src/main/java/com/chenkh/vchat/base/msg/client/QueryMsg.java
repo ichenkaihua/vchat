@@ -5,7 +5,7 @@ import java.nio.channels.AsynchronousSocketChannel;
 import com.chenkh.vchat.base.msg.ClientMsg;
 import com.chenkh.vchat.base.msg.ServerMsgMgr;
 
-public class QueryMsg implements ClientMsg {
+public class QueryMsg  {
 	private final String keyword;
 	private final int queryId;
 	
@@ -22,12 +22,7 @@ public class QueryMsg implements ClientMsg {
 		return this.keyword;
 	}
 	
-	
 
-	@Override
-	public void parse(ServerMsgMgr mgr, AsynchronousSocketChannel socket) {
-		mgr.parseMsg(this, socket);
-	}
 	
 	
 	

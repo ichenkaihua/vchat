@@ -5,6 +5,9 @@ import java.awt.Component;
 
 import javax.swing.JTabbedPane;
 
+/**
+ * 继承JtabbedPane，实现了一个选项卡列表
+ */
 public class VTabbedPane extends JTabbedPane {
 	private ChatFrame frame;
 	private Color msgColor = Color.YELLOW;
@@ -16,13 +19,14 @@ public class VTabbedPane extends JTabbedPane {
 		super();
 		this.frame = frame;
 
+
 	}
 
 	/**
 	 * 增加一个选项卡
 	 */
 	public void addTab(Tab tab) {
-		TabPane tapPane = tab.getTabPane();
+		tabTitlePanel tapPane = tab.getTabPane();
 		TabContenPane contenPane = tab.getContenPane();
 
 		this.add(contenPane, tapPane.getName());

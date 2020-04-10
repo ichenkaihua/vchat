@@ -89,7 +89,7 @@ public class AddFriendBox extends FrameBox {
 			int groupId = group.getGroupId();
 			String noteName = this.note.getText().trim().equals("") ? null
 					: note.getText();
-			ClientMsg msg = new AddFriendMsg(UserMgr.getInstance().getUser()
+			AddFriendMsg msg = new AddFriendMsg(UserMgr.getInstance().getUser()
 					.getId(), this.friendId, groupId, noteName);
 			frame.addClientMsg(msg);
 			if (box != null) {

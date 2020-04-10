@@ -38,26 +38,24 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 
-import com.chenkh.vchat.base.msg.ClientMsg;
+import com.chenkh.vchat.base.bean.*;
 import com.chenkh.vchat.base.msg.both.DeleteFriendMsg;
 import com.chenkh.vchat.base.msg.both.UserStateChangeMsg;
+import com.chenkh.vchat.base.msg.client.AddFriendMsg;
 import com.chenkh.vchat.base.msg.client.QueryMsg;
 import com.chenkh.vchat.base.msg.server.QueryResultMsg;
+import com.chenkh.vchat.client.IContext;
 import com.chenkh.vchat.client.UserMgr;
-import com.chenkh.vchat.client.access.FrameTaskMgr;
 import com.chenkh.vchat.client.frame.ImageConstance;
 import com.chenkh.vchat.client.frame.msgMgr.OnlineMsgListener;
 import com.chenkh.vchat.client.frame.msgMgr.OnlineMsgMgr;
+import com.chenkh.vchat.client.net.IMsgListener;
 import com.chenkh.vchat.client.view.box.SearchBox;
 import com.chenkh.vchat.client.view.box.ShowInfoFrame;
 import com.chenkh.vchat.client.view.pane.ImagePanel;
-import com.chenkh.vchat.base.bean.Friend;
-import com.chenkh.vchat.base.bean.Group;
-import com.chenkh.vchat.base.bean.Stranger;
-import com.chenkh.vchat.base.bean.VState;
 
 public class MainFrame extends VFrame implements OnlineMsgListener,
-		ActionListener {
+		ActionListener , IMsgListener {
 	// 用户
 
 	// 定义用户信息panel，负责展现头像，签名等等
@@ -95,12 +93,15 @@ public class MainFrame extends VFrame implements OnlineMsgListener,
 	private UserMgr userMgr = UserMgr.getInstance();
 	private VNode root = null;
 	private Map<Integer, ShowInfoFrame> showInfoFrames = new HashMap<Integer, ShowInfoFrame>();
+	private IContext context;
 
-	public MainFrame(FrameTaskMgr taskMgr, OnlineMsgMgr msgMgr, String title,
-			int x, int y, int width, int height) {
+	public MainFrame(OnlineMsgMgr msgMgr, String title,
+					 int x, int y, int width, int height, IContext context) {
 
-		super(taskMgr, title, x, y, width, height);
+		super(title, x, y, width, height);
 		this.msgMgr = msgMgr;
+		this.context=context;
+		context.getNetClient().addMsgListener(this);
 
 		msgMgr.add(this);
 		// 初始化系统托盘弹出菜单
@@ -602,6 +603,12 @@ public class MainFrame extends VFrame implements OnlineMsgListener,
 	}
 
 	@Override
+	public void dispose() {
+		context.getNetClient().removeMsgListener(this);
+		super.dispose();
+	}
+
+	@Override
 	public void closeHappen() {
 		// TODO Auto-generated method stub
 
@@ -677,8 +684,9 @@ public class MainFrame extends VFrame implements OnlineMsgListener,
 
 				if (state.toString().equals(str)) {
 					msgMgr.notifyUserStateChanged(state);
-					taskMgr.putMsg(new UserStateChangeMsg(userMgr.getUser()
-							.getId(), state));
+					UserStateChangeMsg userStateChangeMsg = new UserStateChangeMsg(userMgr.getUser()
+							.getId(), state);
+					context.getNetClient().sendUserStateChangedMsg(userStateChangeMsg);
 					return;
 				}
 			}
@@ -694,9 +702,10 @@ public class MainFrame extends VFrame implements OnlineMsgListener,
 
 		if (obj instanceof Friend) {
 			Friend friend = (Friend) obj;
-			ClientMsg msg = new DeleteFriendMsg(userMgr.getUser().getId(),
+			DeleteFriendMsg msg = new DeleteFriendMsg(userMgr.getUser().getId(),
 					friend.getId(), friend.getGroup().getGroupId());
-			taskMgr.putMsg(msg);
+				context.getNetClient().sendDeleteFriendMsg(msg);
+
 
 		}
 
@@ -767,19 +776,23 @@ public class MainFrame extends VFrame implements OnlineMsgListener,
 
 	}
 
-	public void queryResult(QueryResultMsg msg) {
-		this.searchBox.queryResult(msg);
-
+	@Override
+	public void onReceivedQueryResultMsg(QueryResultMsg queryResultMsgMsgBody) {
+		SwingUtilities.invokeLater(()->{this.searchBox.queryResult(queryResultMsgMsgBody);});
 	}
+
+
 
 	public void startSearch(String skeyword) {
 		int id = userMgr.getUser().getId();
-		ClientMsg msg = new QueryMsg(skeyword, id);
-		taskMgr.putMsg(msg);
+		QueryMsg msg = new QueryMsg(skeyword, id);
+		context.getNetClient().sendQueryMsg(msg);
+
 	}
 
-	public void addClientMsg(ClientMsg msg) {
-		taskMgr.putMsg(msg);
+	public void addClientMsg(AddFriendMsg msg) {
+		//taskMgr.putMsg(Msg.buildClientMsg(MsgType.Client2Server.ADD_FRIEND,msg));
+		context.getNetClient().sendAddFriendMsg(msg);
 	}
 
 	public void addFriendSucess(Friend friend, int groupId) {

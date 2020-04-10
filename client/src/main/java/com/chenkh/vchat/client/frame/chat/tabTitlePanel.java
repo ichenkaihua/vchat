@@ -17,7 +17,10 @@ import javax.swing.SwingConstants;
 import com.chenkh.vchat.client.frame.ImageConstance;
 import com.chenkh.vchat.client.frame.VFactory;
 
-public class TabPane extends JPanel implements MouseListener, ActionListener {
+/**
+ * 一个标签头组件，实现了背景切换，带关闭按钮
+ */
+public class tabTitlePanel extends JPanel implements MouseListener, ActionListener {
 	private Tab tab;
 	private VFactory factory = VFactory.getInstance();
 	private JButton bnClose;
@@ -33,7 +36,7 @@ public class TabPane extends JPanel implements MouseListener, ActionListener {
 
 	private JLabel head = new JLabel(new ImageIcon(ImageConstance.head_mini));
 
-	public TabPane(Tab tab,String name) {
+	public tabTitlePanel(Tab tab, String name) {
 		super();
 		this.name = name;
 		this.tab = tab;
@@ -54,7 +57,10 @@ public class TabPane extends JPanel implements MouseListener, ActionListener {
 		// 将关闭按钮添加到panel中
 		this.add(bnClose);
 		this.addMouseListener(this);
-		bnClose.addActionListener(this);
+		//bnClose.addActionListener(this);
+		bnClose.addActionListener(e -> {
+			tab.remove();
+		});
 		//Base
 		
 		this.setOpaque(false);

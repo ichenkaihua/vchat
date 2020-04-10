@@ -1,16 +1,29 @@
 package com.chenkh.vchat.base.msg;
 
+import com.chenkh.vchat.base.bean.MsgType;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+
 import java.io.Serializable;
 import java.nio.channels.AsynchronousSocketChannel;
 
-/**
- * 客户端信息的总接口，分解时，需要借助服务器消息管理器接口，和一个通道口
- * @author Administrator
- *
- */
-public interface ClientMsg extends Serializable {
+
+@Getter
+@AllArgsConstructor
+public class ClientMsg<T>   {
 	
-	public void parse(ServerMsgMgr mgr,AsynchronousSocketChannel socket);
+
+    private MsgType.Client2Server msgType;
+
+
+    private T body;
+
+
+    public static <V> ClientMsg<V> builder(MsgType.Client2Server msgType, V body){
+        return new ClientMsg<>(msgType, body);
+    }
+
 	
 
 }

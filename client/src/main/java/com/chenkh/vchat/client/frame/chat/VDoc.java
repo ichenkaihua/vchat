@@ -9,6 +9,9 @@ import javax.swing.text.SimpleAttributeSet;
 import com.chenkh.vchat.client.UserMgr;
 import com.chenkh.vchat.client.enu.AttSetType;
 
+/**
+ * 继承DefaultStyledDocument,
+ */
 public class VDoc extends DefaultStyledDocument {
 	private boolean lastIsFriend = false;
 	private String userName;
@@ -21,6 +24,7 @@ public class VDoc extends DefaultStyledDocument {
 		super();
 		//caret.
 	//	JTextPane pane=  new JTextPane();
+
 		
 		
 	}
