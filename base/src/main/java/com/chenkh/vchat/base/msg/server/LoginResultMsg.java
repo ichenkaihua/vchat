@@ -1,31 +1,16 @@
 package com.chenkh.vchat.base.msg.server;
 
-import com.chenkh.vchat.base.msg.ClientMsgMgr;
-import com.chenkh.vchat.base.msg.ServerMsg;
 import com.chenkh.vchat.base.msg.server.enu.LoginResult_Type;
 import com.chenkh.vchat.base.bean.User;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
 
-public class LoginResultMsg implements ServerMsg {
-	private final LoginResult_Type result;
+@Getter
+@AllArgsConstructor
+@ToString
+public class LoginResultMsg  {
+	private final String reason;
 	private final User user;
-	
-
-	public User getUser() {
-		return user;
-	}
-
-	public LoginResult_Type getResult() {
-		return result;
-	}
-
-	public LoginResultMsg(LoginResult_Type result, User user) {
-		this.user = user;
-		this.result = result;
-	}
-
-	@Override
-	public void parse(ClientMsgMgr mgr) {
-		mgr.parseMsg(this);
-	}
-
+	private final boolean success;
 }

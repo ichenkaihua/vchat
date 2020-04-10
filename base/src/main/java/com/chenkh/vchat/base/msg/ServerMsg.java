@@ -1,9 +1,23 @@
 package com.chenkh.vchat.base.msg;
 
-import java.io.Serializable;
+import com.chenkh.vchat.base.bean.MsgType;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
 
-public interface ServerMsg extends Serializable {
-	
-	public void parse(ClientMsgMgr mgr);
+@Getter
+@AllArgsConstructor
+public class ServerMsg<T> {
+
+    private MsgType.Server2Client msgType;
+
+    private T body;
+
+
+    public static <V> ServerMsg<V> builde(MsgType.Server2Client msgType,V body){
+        return new ServerMsg(msgType, body);
+    }
+
+
 
 }

@@ -28,7 +28,7 @@ import com.chenkh.vchat.client.tool.ImageTranser;
  * @author Administrator
  * 
  */
-public abstract class VFrame extends JDialog implements TrayListener {
+public abstract class VFrame extends JDialog  implements TrayListener {
 
 	/**
 	 * 
@@ -45,16 +45,16 @@ public abstract class VFrame extends JDialog implements TrayListener {
 	protected VFactory factory = null;
 	protected Image topBkg = null;
 	protected String title = null;
-	protected FrameTaskMgr taskMgr;
+
 	protected PopupMenu popupMenu;
 
-	public VFrame(FrameTaskMgr taskMgr, String title, int width, int height) {
+	public VFrame( String title, int width, int height) {
 
 		this.setUndecorated(true);// 去除系统框架
 		this.width = width;
 		this.height = height;
 		this.setSize(width, height);
-		this.taskMgr = taskMgr;
+
 		this.setPreferredSize(new Dimension(width, height));// 设置最适大小
 		this.setLocationRelativeTo(null);// 使窗体居中
 		// 设置框架容器为mainPane
@@ -96,9 +96,9 @@ public abstract class VFrame extends JDialog implements TrayListener {
 
 	}
 
-	public VFrame(FrameTaskMgr taskMgr, String title, int x, int y, int width,
+	public VFrame(String title, int x, int y, int width,
 			int height) {
-		this(taskMgr, title, width, height);
+		this(title, width, height);
 		this.setLocation(x, y);
 	}
 
@@ -110,11 +110,14 @@ public abstract class VFrame extends JDialog implements TrayListener {
 
 			this.setVisible(true);
 
+
 		}
 
 	}
 
-	public abstract void closeHappen();
+	protected   void closeHappen(){};
+
+	public abstract PopupMenu getPopuMenu();
 
 	public class VListener extends MouseInputAdapter implements ActionListener {
 
@@ -138,6 +141,7 @@ public abstract class VFrame extends JDialog implements TrayListener {
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == bnMin) {
 				VFrame.this.dispose();
+
 			} else if (e.getSource() == bnClose) {
 				closeHappen();
 				System.exit(0);
@@ -147,6 +151,5 @@ public abstract class VFrame extends JDialog implements TrayListener {
 
 	}
 
-	public abstract PopupMenu getPopuMenu();
 
 }

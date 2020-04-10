@@ -5,7 +5,7 @@ import java.nio.channels.AsynchronousSocketChannel;
 import com.chenkh.vchat.base.msg.ClientMsg;
 import com.chenkh.vchat.base.msg.ServerMsgMgr;
 
-public class AddFriendMsg implements ClientMsg {
+public class AddFriendMsg   {
 
 	private final int myId;
 	private final int friendId;
@@ -19,11 +19,7 @@ public class AddFriendMsg implements ClientMsg {
 		this.noteName = noteName;
 	}
 
-	@Override
-	public void parse(ServerMsgMgr mgr, AsynchronousSocketChannel socket) {
-		mgr.parseMsg(this, socket);
 
-	}
 
 	public int getMyId() {
 		return myId;

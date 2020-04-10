@@ -1,5 +1,6 @@
 package com.chenkh.vchat.base.msg;
 
+import com.chenkh.vchat.base.bean.MsgType;
 import com.chenkh.vchat.base.msg.both.DeleteFriendMsg;
 import com.chenkh.vchat.base.msg.both.UserStateChangeMsg;
 import com.chenkh.vchat.base.msg.server.AddFriendSucess;
@@ -11,7 +12,10 @@ import com.chenkh.vchat.base.msg.server.StrangerMsg;
 
 public interface ClientMsgMgr {
 
-	public void parseMsg(ServerMsg msg);
+
+	void processMsg(MsgType.Server2Client type,MsgBody body);
+
+/*	public void parseMsg(ServerMsg msg);
 
 	public void parseMsg(LoginResultMsg msg);
 
@@ -38,7 +42,7 @@ public interface ClientMsgMgr {
 	public void parseMsg(DeleteFriendMsg msg);
 	
 	
-	public void parseMsg(StrangerMsg msg);
+	public void parseMsg(StrangerMsg msg);*/
 	
 	
 	

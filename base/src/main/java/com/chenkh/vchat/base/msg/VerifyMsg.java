@@ -2,7 +2,7 @@ package com.chenkh.vchat.base.msg;
 
 import java.nio.channels.AsynchronousSocketChannel;
 
-public class VerifyMsg implements ServerMsg, ClientMsg {
+public class VerifyMsg  {
 
 	private final int fromId;
 	private final int toId;
@@ -27,16 +27,5 @@ public class VerifyMsg implements ServerMsg, ClientMsg {
 		this.content = content;
 	}
 
-	@Override
-	public void parse(ServerMsgMgr mgr, AsynchronousSocketChannel socket) {
-		mgr.parseMsg(this, socket);
-
-	}
-
-	@Override
-	public void parse(ClientMsgMgr mgr) {
-		mgr.parseMsg(this);
-
-	}
 
 }
