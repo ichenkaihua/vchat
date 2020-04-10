@@ -167,7 +167,7 @@ public class UserMgr {
 		for (Group group : user.getGroups()) {
 			if (group.getGroupId() == groupId) {
 				group.addFriend(friend);
-				friend.setGroup(group);
+				//friend.setGroup(group);
 				this.friends.put(friend.getId(), friend);
 				return;
 			}

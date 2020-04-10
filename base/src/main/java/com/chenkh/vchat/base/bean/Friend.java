@@ -1,5 +1,7 @@
 package com.chenkh.vchat.base.bean;
 
+import com.google.gson.annotations.Expose;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -9,7 +11,9 @@ public class Friend implements Serializable, Comparable<Friend> {
 	private String phone;
 	private String sex;
 	private String addr;
+	@Expose
 	private Timestamp rDate;
+	@Expose
 	private Group group;
 	private String noteName;
 	private String sign;
@@ -39,6 +43,7 @@ public class Friend implements Serializable, Comparable<Friend> {
 	public void setNoteName(String noteName) {
 		this.noteName = noteName;
 	}
+
 
 	public Group getGroup() {
 		return group;

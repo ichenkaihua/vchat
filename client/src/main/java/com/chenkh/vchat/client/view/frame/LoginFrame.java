@@ -1,34 +1,18 @@
 package com.chenkh.vchat.client.view.frame;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Font;
-import java.awt.MenuItem;
-import java.awt.PopupMenu;
+import com.chenkh.vchat.base.bean.VState;
+import com.chenkh.vchat.base.msg.server.LoginResultMsg;
+import com.chenkh.vchat.client.IContext;
+import com.chenkh.vchat.client.frame.ImageConstance;
+import com.chenkh.vchat.client.net.IMsgListener;
+import com.chenkh.vchat.client.view.box.RegisterFrame;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.UnsupportedEncodingException;
-
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-
-import com.chenkh.vchat.base.bean.VState;
-
-import com.chenkh.vchat.base.msg.ClientMsg;
-import com.chenkh.vchat.base.msg.client.LoginMsg;
-import com.chenkh.vchat.base.msg.server.enu.LoginResult_Type;
-import com.chenkh.vchat.client.access.FrameTaskMgr;
-import com.chenkh.vchat.client.frame.ImageConstance;
-import com.chenkh.vchat.client.view.box.RegisterFrame;
 
 /**
  * 登录框架，继承VFrame，实现对登录按钮，取消登录按钮，确定按钮监听
@@ -36,12 +20,14 @@ import com.chenkh.vchat.client.view.box.RegisterFrame;
  * @author Administrator
  * 
  */
-public class LoginFrame extends VFrame implements ActionListener {
+public class LoginFrame extends VFrame implements ActionListener, IMsgListener {
 	@Override
 	public void dispose() {
 		if(registerFrame != null && registerFrame.isVisible()){
 			registerFrame.dispose();
 		}
+		context.getNetClient().removeMsgListener(this);
+		context.getTray().removeObserver(this);
 		super.dispose();
 	}
 
@@ -62,19 +48,23 @@ public class LoginFrame extends VFrame implements ActionListener {
 	private final String[] paneName = { "initPane", "loginingPane",
 			"loginErrorPane" };
 	private RegisterFrame registerFrame;
+	private IContext context;
 
-	public LoginFrame(FrameTaskMgr mgr, String title, int x, int y, int width,
-			int height) {
-		super(mgr, title, x, y, width, height);
-		// this.setVisible(true);
+
+
+	public LoginFrame(String title, int width, int height, IContext context) {
+		super( title, width, height);
+		this.context=context;
+		context.getNetClient().addMsgListener(this);
+		context.getTray().addObserver(this);
+
+
 		showSelf();
+
+
+
 	}
 
-	public LoginFrame(FrameTaskMgr mgr, String title, int width, int height) {
-		super(mgr, title, width, height);
-		showSelf();
-
-	}
 
 	private void showSelf() {
 		// loginMainPane = new VPanel(new BorderLayout());
@@ -340,7 +330,9 @@ public class LoginFrame extends VFrame implements ActionListener {
 
 		} else if(e.getSource()==bnRegister){
 			if(this.registerFrame == null){
-				registerFrame = new RegisterFrame(this,"用户注册",400,500);
+				registerFrame = new RegisterFrame("用户注册",400,500,context,registerId->{
+					SwingUtilities.invokeLater(()->username.setSelectedItem(registerId));
+				});
 				registerFrame.setVisible(true);
 			}
 			else registerFrame.setVisible(true);
@@ -357,63 +349,30 @@ public class LoginFrame extends VFrame implements ActionListener {
 		String sid = (String) username.getSelectedItem();
 		int id = Integer.parseInt(sid);
 		String pas = new String(password.getPassword());
-		ClientMsg msg = new LoginMsg(id, pas, VState.imonline);
-		this.taskMgr.putMsg(msg);
-		System.out.println("开始登录--来自登录客户端");
+		context.getNetClient().sendLoginMsg(id,pas,VState.imonline);
+		context.getTray().startLogin();
+	}
+
+
+
+
+
+
+	@Override
+	public void onReceivedLoginResultMsg(LoginResultMsg loginResultMsg) {
+
+		if(this.isDisplayable() && !loginResultMsg.isSuccess()){
+			SwingUtilities.invokeLater(()->{
+				cardLayout.show(loginStatePane, paneName[1]);
+				errMsg.setText(loginResultMsg.getReason());
+				cardLayout.show(loginStatePane, paneName[2]);
+			});
+
+		}
 	}
 
 	@Override
 	public PopupMenu getPopuMenu() {
-
 		return popupMenu;
 	}
-
-	public void loginResult(LoginResult_Type type) {
-		cardLayout.show(loginStatePane, paneName[1]);
-		switch (type) {
-		case PASSWORD_NOTCORRECT:
-			errMsg.setText("密码不正确，请检查");
-
-			break;
-		case USER_NOTFOUN:
-			errMsg.setText("用户名没有找到");
-			break;
-		}
-		cardLayout.show(loginStatePane, paneName[2]);
-
-	}
-	
-	
-	
-	
-	
-	public void sendMsg(ClientMsg msg){
-		this.taskMgr.putMsg(msg);
-		
-	}
-	
-	
-	
-	
-
-	@Override
-	public void closeHappen() {
-
-		// TODO Auto-generated method stub
-
-	}
-
-	public void registerSucced(int id) {
-		registerFrame.succed(id);
-		
-	}
-
-	public void loginNow(String sid) {
-		this.username.setSelectedItem(sid);
-		
-	}
-	
-	
-	
-
 }

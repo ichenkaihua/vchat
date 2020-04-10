@@ -1,22 +1,19 @@
 package com.chenkh.vchat.client;
 
-import java.awt.AWTException;
-import java.awt.MouseInfo;
-import java.awt.Point;
-import java.awt.PopupMenu;
-import java.awt.SystemTray;
-import java.awt.TrayIcon;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.Timer;
 
 import com.chenkh.vchat.client.enu.LoginState;
 import com.chenkh.vchat.client.frame.ImageConstance;
+import com.chenkh.vchat.client.frame.msgMgr.MsgMgrO;
 import com.chenkh.vchat.client.frame.msgMgr.OnlineMsgListener;
 import com.chenkh.vchat.client.frame.msgMgr.OnlineMsgMgr;
 import com.chenkh.vchat.client.listener.TrayListener;
@@ -30,10 +27,10 @@ import com.chenkh.vchat.base.bean.VState;
  * @author Administrator
  * 
  */
-public class VTray implements TrayObserverable, ActionListener,
-		OnlineMsgListener, MouseMotionListener {
+public class VTray implements  ActionListener,
+		OnlineMsgListener, MouseMotionListener,ITray {
 	private TrayIcon trayIcon;
-	private List<TrayListener> listeners = new ArrayList<TrayListener>();
+	private List<TrayListener> listeners = new CopyOnWriteArrayList<>();
 	private boolean logining = false;
 
 	private boolean allowRemenber = true;
@@ -58,7 +55,7 @@ public class VTray implements TrayObserverable, ActionListener,
 
 		SystemTray tray = SystemTray.getSystemTray();
 		trayIcon = new TrayIcon(
-				ImageConstance.tray_vchat_state.get(VState.offline), "QQ2013") {
+				ImageConstance.tray_vchat_state.get(VState.offline), "vchat") {
 
 			@Override
 			public synchronized void addMouseMotionListener(
@@ -167,7 +164,10 @@ public class VTray implements TrayObserverable, ActionListener,
 
 	}
 
+	@Override
 	public void setPopupMenu(PopupMenu popup) {
+		MenuItem menuItem=null;
+
 		trayIcon.setPopupMenu(popup);
 	}
 
@@ -196,6 +196,7 @@ public class VTray implements TrayObserverable, ActionListener,
 	public void actionPerformed(ActionEvent e) {
 
 		for (TrayListener listener : listeners) {
+
 			listener.trayClick();
 		}
 
@@ -215,6 +216,11 @@ public class VTray implements TrayObserverable, ActionListener,
 		}
 
 		this.userStateChanged(state);
+	}
+
+	@Override
+	public void setOnlineMsgMgr(MsgMgrO msgMgr) {
+
 	}
 
 	@Override

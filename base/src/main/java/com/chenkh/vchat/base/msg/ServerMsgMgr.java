@@ -1,7 +1,9 @@
 package com.chenkh.vchat.base.msg;
 
+import java.nio.channels.AsynchronousByteChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 
+import com.chenkh.vchat.base.bean.MsgType;
 import com.chenkh.vchat.base.msg.both.DeleteFriendMsg;
 import com.chenkh.vchat.base.msg.both.UserStateChangeMsg;
 import com.chenkh.vchat.base.msg.client.AddFriendMsg;
@@ -18,8 +20,11 @@ import com.chenkh.vchat.base.msg.client.RegisterMsg;
 
 public interface ServerMsgMgr {
 	
-	
-	public void parseMsg(ClientMsg msg,AsynchronousSocketChannel socket);
+
+
+	void processMsg(MsgType.Client2Server msgType, MsgBody msgBody, AsynchronousSocketChannel socket);
+
+	/*public void parseMsg(ClientMsg msg,AsynchronousSocketChannel socket);
 	
 	
 	public void parseMsg(LoginMsg msg,AsynchronousSocketChannel socket);
@@ -41,7 +46,7 @@ public interface ServerMsgMgr {
 	public void parseMsg(AddFriendMsg msg,AsynchronousSocketChannel socket);
 	
 	
-	public void parseMsg(DeleteFriendMsg msg,AsynchronousSocketChannel socket);
+	public void parseMsg(DeleteFriendMsg msg,AsynchronousSocketChannel socket);*/
 	
 	
 	
